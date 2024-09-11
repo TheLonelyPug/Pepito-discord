@@ -1,6 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
-const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, ActivityType } = require('discord.js');
 const EventSource = require('eventsource');
 
 const channelsFilePath = './channels.json';
@@ -44,7 +44,8 @@ const client = new Client({
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
-const CAT_DOOR_API_URL = 'https://api.thecatdoor.com/sse/v1/events';
+const CAT_DOOR_API_URL = process.env.CAT_DOOR_API_URL;
+const PEPITO_ICON_URL = process.env.PEPITO_ICON_URL;
 
 function formatUnixTimestamp(unixTimestamp) {
     const date = new Date(unixTimestamp * 1000);
@@ -83,6 +84,8 @@ async function registerCommands() {
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     
+    client.user.setActivity('/setchannel to get started', { type: ActivityType.Playing });
+
     await registerCommands();
 
     const eventSource = new EventSource(CAT_DOOR_API_URL);
@@ -96,7 +99,7 @@ client.once('ready', async () => {
                 .setColor('#0099ff')
                 .setImage(data.img)
                 .setTimestamp()
-                .setFooter({ text: 'Pépito', iconURL: 'https://pbs.twimg.com/profile_images/1713252555336134657/gD97QysY_400x400.jpg' });
+                .setFooter({ text: 'Pépito', iconURL: PEPITO_ICON_URL });
 
             if (data.type === 'in') {
                 embed.setTitle(`Pépito is back home (${eventTime})`);
