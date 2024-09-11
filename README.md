@@ -32,7 +32,3 @@ Both API Url and icon Url will be present in the .env file.
 
 Once the Discord bot has been invited to your server of choosing, execute /setchannel, as this bot utilize slash commands, it will pop up with a channel option where you can input your channel of choice.
 You can do the same command if you wish to change the channel it sends the notifications to by choosing another channel instead of the initial channel you selected.
-
-## License
-
-This work is licensed under GNU GPLv3
