@@ -25,7 +25,9 @@ npm install eventsource
 | Bot token             | DISCORD_BOT_TOKEN | 937it3ow87i4ery69876wqire                                                     |
 | Bot client ID         | CLIENT_ID         | 332269999912132097                                                            |
 
-Neither the token and client ID provided here is real and is taken from the [Discord.js OAuth2](https://discord.com/developers/docs/topics/oauth2) page, you will have to provide your own.
+Neither the token and client ID provided here is real and is taken from the [Discord.js OAuth2](https://discord.com/developers/docs/topics/oauth2) page, you will have to provide your own. 
+Both API Url and icon Url will be present in the .env file.
+
 ## License
 
 This work is licensed under GNU GPLv3
