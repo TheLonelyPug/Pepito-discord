@@ -1,6 +1,6 @@
 # Discord bot for Pépito API
 
-An unofficial Discord bot for the [Pépito-API](https://github.com/Clement87/Pepito-API?). Written in javascript with Discord.js
+An unofficial Discord bot for the [Pépito-API](https://github.com/Clement87/Pepito-API?). Written in JavaScript with Discord.js
 
 Currently used for the [Discord bot](https://discord.com/oauth2/authorize?client_id=1282732564657737788&permissions=2147601408&integration_type=0&scope=bot).
 
