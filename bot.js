@@ -94,6 +94,8 @@ client.once('ready', async () => {
         const data = JSON.parse(event.data);
 
         if (data.event === 'pepito') {
+            console.log(JSON.stringify(data));
+
             const eventTime = formatUnixTimestamp(data.time);
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
@@ -120,8 +122,11 @@ client.once('ready', async () => {
     };
 
     eventSource.onerror = (err) => {
-        console.error('Error with SSE:', err);
+        if (err.message !== undefined) {
+            console.error('Error with SSE:', err);
+        }
     };
+    
 });
 
 client.on('interactionCreate', async (interaction) => {
