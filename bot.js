@@ -136,18 +136,19 @@ client.on('interactionCreate', async (interaction) => {
 
     if (commandName === 'setchannel') {
         const channel = interaction.options.getChannel('channel');
+        const guildId = interaction.guild.id;
+        const currentChannelId = channelsData[guildId];
 
         if (!interaction.member.permissions.has('MANAGE_CHANNELS')) {
             return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
         }
 
-        if (channelsData[interaction.guild.id]) {
-            channelsData[interaction.guild.id] = channel.id;
-            await interaction.reply(`Channel has been updated. Pépito notifications will now be sent to ${channel}`);
-        } else {
-            channelsData[interaction.guild.id] = channel.id;
-            await interaction.reply(`Channel has been set. Pépito notifications will now be sent to ${channel}`);
+        if (currentChannelId === channel.id) {
+            return interaction.reply({ content: `The selected channel is already set as the notification channel.`, ephemeral: true });
         }
+
+        channelsData[guildId] = channel.id;
+        await interaction.reply(`Channel has been ${currentChannelId ? 'updated' : 'set'}. Pépito notifications will now be sent to ${channel}`);
 
         saveChannelSettings();
     }
