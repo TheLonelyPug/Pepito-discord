@@ -88,6 +88,18 @@ client.once('ready', async () => {
 
     await registerCommands();
 
+    client.guilds.cache.forEach((guild) => {
+        if (!channelsData[guild.name]) {
+            const channelId = channelsData[guild.id];
+            if (channelId) {
+                channelsData[guild.name] = { "GUILD ID": guild.id, "CHANNEL ID": channelId };
+                delete channelsData[guild.id];
+            }
+        }
+    });
+
+    saveChannelSettings();
+
     const eventSource = new EventSource(CAT_DOOR_API_URL);
 
     eventSource.onmessage = (event) => {
@@ -110,9 +122,9 @@ client.once('ready', async () => {
             }
 
             client.guilds.cache.forEach(guild => {
-                const channelId = channelsData[guild.id];
-                if (channelId) {
-                    const targetChannel = client.channels.cache.get(channelId);
+                const serverData = channelsData[guild.name];
+                if (serverData && serverData["GUILD ID"] === guild.id) {
+                    const targetChannel = client.channels.cache.get(serverData["CHANNEL ID"]);
                     if (targetChannel) {
                         targetChannel.send({ embeds: [embed] });
                     }
@@ -126,7 +138,14 @@ client.once('ready', async () => {
             console.error('Error with SSE:', err);
         }
     };
-    
+});
+
+client.on('guildDelete', (guild) => {
+    if (channelsData[guild.name]) {
+        console.log(`Bot was removed from guild: ${guild.name} (${guild.id}). Removing from database.`);
+        delete channelsData[guild.name];
+        saveChannelSettings();
+    }
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -137,18 +156,19 @@ client.on('interactionCreate', async (interaction) => {
     if (commandName === 'setchannel') {
         const channel = interaction.options.getChannel('channel');
         const guildId = interaction.guild.id;
-        const currentChannelId = channelsData[guildId];
+        const guildName = interaction.guild.name;
+        const currentChannelData = channelsData[guildName];
 
         if (!interaction.member.permissions.has('MANAGE_CHANNELS')) {
             return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
         }
 
-        if (currentChannelId === channel.id) {
+        if (currentChannelData && currentChannelData["CHANNEL ID"] === channel.id) {
             return interaction.reply({ content: `The selected channel is already set as the notification channel.`, ephemeral: true });
         }
 
-        channelsData[guildId] = channel.id;
-        await interaction.reply(`Channel has been ${currentChannelId ? 'updated' : 'set'}. Pépito notifications will now be sent to ${channel}`);
+        channelsData[guildName] = { "GUILD ID": guildId, "CHANNEL ID": channel.id };
+        await interaction.reply(`Channel has been ${currentChannelData ? 'updated' : 'set'}. Pépito notifications will now be sent to ${channel}`);
 
         saveChannelSettings();
     }
