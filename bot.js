@@ -1,6 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
-const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, ActivityType } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, ActivityType, PermissionsBitField } = require('discord.js');
 const EventSource = require('eventsource');
 
 const channelsFilePath = './channels.json';
@@ -159,7 +159,7 @@ client.on('interactionCreate', async (interaction) => {
         const guildName = interaction.guild.name;
         const currentChannelData = channelsData[guildName];
 
-        if (!interaction.member.permissions.has('MANAGE_CHANNELS')) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
             return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
         }
 
