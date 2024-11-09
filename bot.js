@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const { Client, GatewayIntentBits, EmbedBuilder, REST, Routes, ActivityType, PermissionsBitField } = require('discord.js');
+const EventSource = require('eventsource');
 
 const channelsFilePath = './channels.json';
 let channelsData = {};
@@ -82,7 +83,7 @@ async function registerCommands() {
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-
+    
     client.user.setActivity('/setchannel to get started', { type: ActivityType.Playing });
 
     await registerCommands();
@@ -99,65 +100,49 @@ client.once('ready', async () => {
 
     saveChannelSettings();
 
-    try {
-        const response = await fetch(CAT_DOOR_API_URL);
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
+    const eventSource = new EventSource(CAT_DOOR_API_URL);
 
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
+    eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-            buffer += decoder.decode(value, { stream: true });
+        if (data.event === 'pepito') {
+            console.log(JSON.stringify(data));
 
-            const lines = buffer.split('\n');
-            buffer = lines.pop();
+            const eventTime = formatUnixTimestamp(data.time);
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setImage(data.img)
+                .setTimestamp()
+                .setFooter({ text: 'Pépito', iconURL: PEPITO_ICON_URL });
 
-            lines.forEach((line) => {
-                try {
-                    if (line.startsWith('data: ')) {
-                        const jsonData = line.slice(6);
-                        const data = JSON.parse(jsonData);
+            if (data.type === 'in') {
+                embed.setTitle(`Pépito is back home (${eventTime})`);
+            } else if (data.type === 'out') {
+                embed.setTitle(`Pépito is out (${eventTime})`);
+            }
 
-                        if (data.event === 'pepito' && (data.type === 'in' || data.type === 'out')) {
-                            const eventTime = formatUnixTimestamp(data.time);
-                            const embed = new EmbedBuilder()
-                                .setColor('#0099ff')
-                                .setImage(data.img)
-                                .setTimestamp()
-                                .setFooter({ text: 'Pépito', iconURL: PEPITO_ICON_URL });
-
-                            if (data.type === 'in') {
-                                embed.setTitle(`Pépito is back home (${eventTime})`);
-                            } else if (data.type === 'out') {
-                                embed.setTitle(`Pépito is out (${eventTime})`);
-                            }
-
-                            client.guilds.cache.forEach(guild => {
-                                const serverData = channelsData[guild.name];
-                                if (serverData && serverData["GUILD ID"] === guild.id) {
-                                    const targetChannel = client.channels.cache.get(serverData["CHANNEL ID"]);
-                                    if (targetChannel) {
-                                        targetChannel.send({ embeds: [embed] });
-                                    }
-                                }
-                            });
-                        }
+            client.guilds.cache.forEach(guild => {
+                const serverData = channelsData[guild.name];
+                if (serverData && serverData["GUILD ID"] === guild.id) {
+                    const targetChannel = client.channels.cache.get(serverData["CHANNEL ID"]);
+                    if (targetChannel) {
+                        targetChannel.send({ embeds: [embed] });
                     }
-                } catch (error) {
-                    console.error('Error parsing event data:', error);
                 }
             });
         }
-    } catch (error) {
-        console.error('Error with fetch or streaming:', error);
-    }
+    };
+
+    eventSource.onerror = (err) => {
+        if (err.message !== undefined) {
+            console.error('Error with SSE:', err);
+        }
+    };
 });
 
 client.on('guildDelete', (guild) => {
     if (channelsData[guild.name]) {
-        console.log(`Bot was removed from guild: ${guild.name}. Removing from database.`);
+        console.log(`Bot was removed from guild: ${guild.name} (${guild.id}). Removing from database.`);
         delete channelsData[guild.name];
         saveChannelSettings();
     }
