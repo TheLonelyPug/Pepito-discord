@@ -4,11 +4,6 @@ An unofficial Discord bot for the [Pépito-API](https://github.com/Clement87/Pep
 
 Currently used for the [Discord bot](https://discord.com/oauth2/authorize?client_id=1282732564657737788&permissions=2147601408&integration_type=0&scope=bot).
 
-## Build
-
-You can use the Dockerfile to generate a docker image. 
-There is an example [docker-compose](https://github.com/marcschuler/pepito-mastodon/blob/master/docker-compose.yml) file.
-
 ## Configuration
 
 You need to install the following packages with npm:
