@@ -19,9 +19,9 @@ npm install eventsource
 | Pêpito icon Url       | PEPITO_ICON_URL   | https://pbs.twimg.com/profile_images/1713252555336134657/gD97QysY_400x400.jpg |
 | Bot token             | DISCORD_BOT_TOKEN | 937it3ow87i4ery69876wqire                                                     |
 | Bot client ID         | CLIENT_ID         | 332269999912132097                                                            |
-
-Neither the token and client ID provided here is real and is taken from the [Discord.js OAuth2](https://discord.com/developers/docs/topics/oauth2) page, you will have to provide your own. 
-Both API Url and icon Url will be present in the .env file.
+| Dev guild ID          | DEV_SERVER_ID     | 1297817230130058546                                                           |
+Neither the token, client ID and dev guild id provided here is real and is taken from the [Discord.js OAuth2](https://discord.com/developers/docs/topics/oauth2) page, you will have to provide your own. 
+Both API Url and icon Url will be present in the .env file but can be changed as you wish.
 
 ## Usage
 
