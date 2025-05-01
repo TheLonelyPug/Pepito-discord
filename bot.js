@@ -262,6 +262,11 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
+// Utility function to add a delay
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Function to send announcements to all servers except the dev server
 async function sendAnnouncement(messageContent) {
     const devServerId = process.env.DEV_SERVER_ID;
@@ -270,6 +275,8 @@ async function sendAnnouncement(messageContent) {
         .setDescription(messageContent)
         .setColor('#0099ff')
         .setTimestamp();
+
+    let backoff = 5000; // Start with 5 seconds
 
     for (const [guildName, serverData] of Object.entries(channelsData)) {
         // Skip entries without a valid "GUILD ID" or "CHANNEL ID"
@@ -286,13 +293,23 @@ async function sendAnnouncement(messageContent) {
         if (targetChannel) {
             try {
                 await targetChannel.send({ embeds: [announcementEmbed] });
+                backoff = 5000; // Reset backoff on success
                 console.log(`Announcement sent to ${guildName} (${serverData["GUILD ID"]})`);
             } catch (error) {
-                console.error(`Failed to send announcement to ${guildName} (${serverData["GUILD ID"]})`, error);
+                if (error.code === 429) {
+                    console.warn(`Rate limit hit. Retrying after ${backoff}ms...`);
+                    await delay(backoff);
+                    backoff *= 2; // Double the backoff time
+                } else {
+                    console.error(`Failed to send announcement to ${guildName} (${serverData["GUILD ID"]})`, error);
+                }
             }
         } else {
             console.warn(`Channel not found for ${guildName} (${serverData["GUILD ID"]})`);
         }
+
+        // Add a delay between requests to avoid hitting rate limits
+        await delay(1000); // Adjust this value based on the API's rate limits
     }
 }
 
