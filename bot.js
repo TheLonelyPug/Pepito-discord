@@ -144,11 +144,13 @@ function setupEventSource() {
     };
 
     eventSource.onerror = (err) => {
-        if (err.message !== undefined) {
+        if (err.message && err.message.includes('ECONNRESET')) {
             console.error(SSE_ERROR, err);
+            console.log('Reconnecting to EventSource due to ECONNRESET...');
+            setTimeout(setupEventSource, 5000); // Retry connection after 5 seconds
+        } else {
+            console.error('Non-reconnectable error with EventSource:', err);
         }
-        console.log('Reconnecting to EventSource...');
-        setTimeout(setupEventSource, 5000); // Retry connection after 5 seconds
     };
 }
 
