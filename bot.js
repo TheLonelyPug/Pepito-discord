@@ -11,10 +11,14 @@ const PERMISSION_ERROR = 'You do not have permission to use this command.';
 const COMMAND_REGISTER_SUCCESS = 'Successfully registered application commands.';
 const COMMAND_REGISTER_ERROR = 'Error registering application commands:';
 const SSE_ERROR = 'Error with SSE:';
+const ANNOUNCEMENT_TITLE = 'This is a global announcement from Pépito! 🐈';
+const PEPITO_IN = 'Pépito is back home!';
+const PEPITO_OUT = 'Pépito is out!';
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CAT_DOOR_API_URL = process.env.CAT_DOOR_API_URL;
 const PEPITO_ICON_URL = process.env.PEPITO_ICON_URL;
+
 
 // Validate environment variables
 if (!DISCORD_BOT_TOKEN || !CLIENT_ID || !CAT_DOOR_API_URL || !PEPITO_ICON_URL) {
@@ -123,8 +127,8 @@ function setupEventSource() {
                 .setFooter({ text: 'Pépito', iconURL: PEPITO_ICON_URL });
 
             embed.setTitle(data.type === 'in' 
-                ? `Pépito is back home (${eventTime})` 
-                : `Pépito is out (${eventTime})`);
+                ? `${PEPITO_IN} (${eventTime})` 
+                : `${PEPITO_OUT} (${eventTime})`);
 
             // Send the notification to the appropriate channel in each guild
             client.guilds.cache.forEach(guild => {
@@ -258,6 +262,11 @@ client.on('interactionCreate', async (interaction) => {
 // Function to send announcements to all servers except the dev server
 async function sendAnnouncement(messageContent) {
     const devServerId = process.env.DEV_SERVER_ID;
+    const announcementEmbed = new EmbedBuilder()
+        .setTitle(ANNOUNCEMENT_TITLE)
+        .setDescription(messageContent)
+        .setColor('#0099ff')
+        .setTimestamp();
 
     for (const [guildName, serverData] of Object.entries(channelsData)) {
         // Skip entries without a valid "GUILD ID" or "CHANNEL ID"
@@ -273,7 +282,7 @@ async function sendAnnouncement(messageContent) {
         const targetChannel = client.channels.cache.get(serverData["CHANNEL ID"]);
         if (targetChannel) {
             try {
-                await targetChannel.send(messageContent);
+                await targetChannel.send({ embeds: [announcementEmbed] });
                 console.log(`Announcement sent to ${guildName} (${serverData["GUILD ID"]})`);
             } catch (error) {
                 console.error(`Failed to send announcement to ${guildName} (${serverData["GUILD ID"]})`, error);
