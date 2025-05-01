@@ -295,9 +295,6 @@ async function sendAnnouncement(messageContent) {
     }
 }
 
-// Example usage: Call this function with the announcement message
-// sendAnnouncement('This is a global announcement from Pépito! 🎉');
-
 // Periodic reminder for servers without a configured channel
 async function remindUnsetChannels() {
     for (const guild of client.guilds.cache.values()) {
