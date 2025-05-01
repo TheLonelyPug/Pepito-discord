@@ -219,7 +219,7 @@ client.on('interactionCreate', async (interaction) => {
 
         // Restrict command to server admins only
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-            return interaction.reply({ content: 'Only server admins can use this command.', ephemeral: true });
+            return interaction.reply({ content: PERMISSION_ERROR, ephemeral: true });
         }
 
         if (currentChannelData && currentChannelData["CHANNEL ID"] === channel.id) {
