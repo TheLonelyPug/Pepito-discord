@@ -16,7 +16,7 @@ npm install eventsource
 | Key                   | .env              | Example value                                                                 |
 |-----------------------|-------------------|-------------------------------------------------------------------------------|
 | Pêpito API Url        | CAT_DOOR_API_URL  | https://api.thecatdoor.com/sse/v1/events                                      |
-| Pêpito icon Url       | PEPITO_ICON_URL   | https://pbs.twimg.com/profile_images/1713252555336134657/gD97QysY_400x400.jpg |
+| Pêpito icon Url       | PEPITO_ICON_URL   | https://pbs.twimg.com/profile_images/1844411806069964808/JKUj_DrD_400x400.jpg |
 | Bot token             | DISCORD_BOT_TOKEN | 937it3ow87i4ery69876wqire                                                     |
 | Bot client ID         | CLIENT_ID         | 332269999912132097                                                            |
 | Dev guild ID          | DEV_SERVER_ID     | 1297817230130058546                                                           |
