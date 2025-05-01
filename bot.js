@@ -106,26 +106,7 @@ async function registerCommands() {
     }
 }
 
-client.once('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-    client.user.setActivity('/setchannel to get started', { type: ActivityType.Playing });
-
-    await registerCommands();
-
-    // Migrate old channel data format to the new format
-    client.guilds.cache.forEach((guild) => {
-        if (!channelsData[guild.name]) {
-            const channelId = channelsData[guild.id];
-            if (channelId) {
-                channelsData[guild.name] = { "GUILD ID": guild.id, "CHANNEL ID": channelId };
-                delete channelsData[guild.id];
-            }
-        }
-    });
-
-    saveChannelSettings();
-
-    // Set up Server-Sent Events (SSE) to listen for notifications
+function setupEventSource() {
     const eventSource = new EventSource(CAT_DOOR_API_URL);
 
     eventSource.onmessage = (event) => {
@@ -162,7 +143,32 @@ client.once('ready', async () => {
         if (err.message !== undefined) {
             console.error(SSE_ERROR, err);
         }
+        console.log('Reconnecting to EventSource...');
+        setTimeout(setupEventSource, 5000); // Retry connection after 5 seconds
     };
+}
+
+client.once('ready', async () => {
+    console.log(`Logged in as ${client.user.tag}!`);
+    client.user.setActivity('/setchannel to get started', { type: ActivityType.Playing });
+
+    await registerCommands();
+
+    // Migrate old channel data format to the new format
+    client.guilds.cache.forEach((guild) => {
+        if (!channelsData[guild.name]) {
+            const channelId = channelsData[guild.id];
+            if (channelId) {
+                channelsData[guild.name] = { "GUILD ID": guild.id, "CHANNEL ID": channelId };
+                delete channelsData[guild.id];
+            }
+        }
+    });
+
+    saveChannelSettings();
+
+    // Set up Server-Sent Events (SSE) to listen for notifications
+    setupEventSource();
 });
 
 // Handle when the bot is removed from a guild
