@@ -1,29 +1,68 @@
-# Discord bot for Pépito API
+# Pépito Discord Bot 🐈
 
-An unofficial Discord bot for the [Pépito-API](https://github.com/Clement87/Pepito-API?). Written in JavaScript with Discord.js
+## **Bot available for interaction on Discord!**
+* [Invite Pépito to your server](https://discord.com/oauth2/authorize?client_id=1282732564657737788&permissions=2147601408&integration_type=0&scope=bot)
 
-Currently used for the [Discord bot](https://discord.com/oauth2/authorize?client_id=1282732564657737788&permissions=2147601408&integration_type=0&scope=bot).
+A Discord bot that tracks Pépito's adventures, providing real-time updates about his comings and goings.
 
-## Configuration
+## Features
+- 🏠 Real-time tracking of Pépito's location (indoor/outdoor)
+- 📢 Global announcements for all servers
+- ⏰ Periodic reminders for server admins to configure notification channels
+- 🖼️ Embedded messages with images and updates
 
-You need to install the following packages with npm:
-```
-npm install dotenv
-npm install discord.js
-npm install eventsource
-```
+## Setup
 
-| Key                   | .env              | Example value                                                                 |
-|-----------------------|-------------------|-------------------------------------------------------------------------------|
-| Pêpito API Url        | CAT_DOOR_API_URL  | https://api.thecatdoor.com/sse/v1/events                                      |
-| Pêpito icon Url       | PEPITO_ICON_URL   | https://pbs.twimg.com/profile_images/1844411806069964808/JKUj_DrD_400x400.jpg |
-| Bot token             | DISCORD_BOT_TOKEN | 937it3ow87i4ery69876wqire                                                     |
-| Bot client ID         | CLIENT_ID         | 332269999912132097                                                            |
-| Dev guild ID          | DEV_SERVER_ID     | 1297817230130058546                                                           |
-Neither the token, client ID and dev guild id provided here is real and is taken from the [Discord.js OAuth2](https://discord.com/developers/docs/topics/oauth2) page, you will have to provide your own. 
-Both API Url and icon Url will be present in the .env file but can be changed as you wish.
+### Prerequisites
+- Node.js (v16 or higher)
+- A Discord Bot Token (from [Discord Developer Portal](https://discord.com/developers/applications))
+- Access to the [Pépito API](https://github.com/Clement87/Pepito-API)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/TheLonelyPug/Pepito-discord.git
+   cd pepito-discord
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install dotenv discord.js eventsource
+   ```
+
+3. Create a `.env` file in the root directory:
+   ```plaintext
+   DISCORD_BOT_TOKEN=your bot token here
+   CLIENT_ID=your client id here
+   CAT_DOOR_API_URL=your API url here
+   PEPITO_ICON_URL=your icon url here
+   DEV_SERVER_ID=guild id for your dev server
+   ```
+
+4. Start the bot:
+   ```bash
+   node bot.js
+   ```
+
+## Project Structure
+   ```
+   pepito-bot/
+   ├── .env              # Environment variables (not in git)
+   ├── channels.json     # Channels database
+   ├── README.md         # This file
+   └── bot.js            # Main application entry point
+   ```
+
+## Commands
+
+* `/setchannel` - Set the channel for Pépito notifications. Use this command in the desired channel to receive updates.
+* `/announce` - Send a global announcement. This command is restricted to the developer server and requires appropriate permissions.
 
 ## Usage
+1. Invite the bot to your server using the OAuth2 URL from the Discord Developer Portal.
+2. Use `/setchannel` to configure a notification channel.
+3. Enjoy real-time updates from Pépito!
 
-Once the Discord bot has been invited to your server of choosing, execute /setchannel, as this bot utilize slash commands, it will pop up with a channel option where you can input your channel of choice.
-You can do the same command if you wish to change the channel it sends the notifications to by choosing another channel instead of the initial channel you selected.
+## License
+[Apache 2.0 License](https://github.com/TheLonelyPug/Pepito-discord/blob/main/LICENSE)
