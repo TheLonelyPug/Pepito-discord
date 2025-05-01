@@ -47,7 +47,7 @@ A Discord bot that tracks Pépito's adventures, providing real-time updates abou
 
 ## Project Structure
    ```
-   pepito-bot/
+   pepito-discord/
    ├── .env              # Environment variables (not in git)
    ├── README.md         # This file
    ├── bot.js            # Main application entry point
