@@ -49,9 +49,9 @@ A Discord bot that tracks Pépito's adventures, providing real-time updates abou
    ```
    pepito-bot/
    ├── .env              # Environment variables (not in git)
-   ├── channels.json     # Channels database
    ├── README.md         # This file
-   └── bot.js            # Main application entry point
+   ├── bot.js            # Main application entry point
+   └── channels.json     # Channels database
    ```
 
 ## Commands
