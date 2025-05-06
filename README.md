@@ -1,3 +1,4 @@
+# Currently being rewritten
 # Pépito Discord Bot 🐈
 
 ## **Bot available for interaction on Discord!**
