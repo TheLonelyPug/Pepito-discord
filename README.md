@@ -2,7 +2,7 @@
 # Pépito Discord Bot 🐈
 
 ## **Bot available for interaction on Discord!**
-* [Invite Pépito to your server](https://discord.com/oauth2/authorize?client_id=1282732564657737788&permissions=2147601408&integration_type=0&scope=bot)
+* [Invite Pépito to your server](https://discord.com/oauth2/authorize?client_id=1282732564657737788)
 
 A Discord bot that tracks Pépito's adventures, providing real-time updates about his comings and goings.
 
