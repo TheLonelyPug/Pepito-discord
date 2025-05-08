@@ -1,4 +1,3 @@
-# Currently being rewritten
 # Pépito Discord Bot 🐈
 
 ## **Bot available for interaction on Discord!**
@@ -15,7 +14,7 @@ A Discord bot that tracks Pépito's adventures, providing real-time updates abou
 ## Setup
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Python 3.9 or higher
 - A Discord Bot Token (from [Discord Developer Portal](https://discord.com/developers/applications))
 - Access to the [Pépito API](https://github.com/Clement87/Pepito-API)
 
@@ -29,30 +28,35 @@ A Discord bot that tracks Pépito's adventures, providing real-time updates abou
 
 2. Install dependencies:
    ```bash
-   npm install dotenv discord.js eventsource
+   pip install -r requirements.txt
    ```
 
 3. Create a `.env` file in the root directory:
    ```plaintext
-   DISCORD_BOT_TOKEN=your bot token here
-   CLIENT_ID=your client id here
-   CAT_DOOR_API_URL=your API url here
-   PEPITO_ICON_URL=your icon url here
+   DISCORD_TOKEN=your bot token here
+   API_URL=your API url here
    DEV_SERVER_ID=guild id for your dev server
    ```
 
 4. Start the bot:
    ```bash
-   node bot.js
+   python bot.py
    ```
 
 ## Project Structure
    ```
-   pepito-discord/
-   ├── .env              # Environment variables (not in git)
-   ├── README.md         # This file
-   ├── bot.js            # Main application entry point
-   └── channels.json     # Channels database
+pepito-discord/
+├── .env              # Environment variables (not in git)
+├── README.md         # This file
+├── bot.py            # Main application entry point
+├── cogs/             # Folder containing all bot cogs
+│   ├── setchannel.py # Cog for setting notification channels
+│   ├── announce.py   # Cog for global announcements
+│   ├── api_connection.py # Cog for connecting to the Pépito API
+│   ├── pepito_events.py  # Cog for handling Pépito events
+│   └── hello.py      # Cog for welcome messages
+├── channels.json     # Channels database
+└── requirements.txt  # Python dependencies
    ```
 
 ## Commands
