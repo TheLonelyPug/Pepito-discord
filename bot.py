@@ -22,6 +22,13 @@ async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
 
+    # Sync commands globally
+    try:
+        await bot.tree.sync()
+        print("Slash commands have been synchronized globally.")
+    except Exception as e:
+        print(f"Failed to sync commands: {e}")
+
     # Load cogs dynamically
     cogs = [
         'cogs.setchannel',      # Set channel cog
