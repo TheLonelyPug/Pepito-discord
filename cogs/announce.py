@@ -32,6 +32,11 @@ class AnnounceCog(commands.Cog):
         # Send the announcement to all servers with a set channel
         failed_guilds = []
         for guild_id, info in data.items():
+            # Check if "channel_id" exists in the guild's data
+            if "channel_id" not in info:
+                failed_guilds.append(info.get("server_name", f"Unknown Guild (ID: {guild_id})"))
+                continue
+
             channel_id = int(info["channel_id"])
             channel = self.bot.get_channel(channel_id)
             if channel:
