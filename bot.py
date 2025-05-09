@@ -9,8 +9,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 # Initialize the bot
-intents = discord.Intents.default()
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='!', intents = discord.Intents.all())
 
 # Load cogs
 @bot.event
@@ -21,13 +20,6 @@ async def on_ready():
 
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
-
-    # Sync commands globally
-    try:
-        await bot.tree.sync()
-        print("Slash commands have been synchronized globally.")
-    except Exception as e:
-        print(f"Failed to sync commands: {e}")
 
     # Load cogs dynamically
     cogs = [
@@ -43,6 +35,13 @@ async def on_ready():
             print(f'Loaded {cog}')
         except Exception as e:
             print(f'Failed to load {cog}: {e}')
+
+    # Sync commands globally
+    try:
+        synced = await bot.tree.sync()  # Use bot.tree to sync commands
+        print(f"Synced {len(synced)} commands globally.")
+    except Exception as e:
+        print(f"Failed to sync commands: {e}")
 
 # Run the bot
 bot.run(TOKEN)
