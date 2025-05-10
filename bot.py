@@ -27,7 +27,7 @@ async def on_ready():
         'cogs.announce',        # Announcement cog
         'cogs.api_connection',  # API connection cog
         'cogs.pepito_events',   # Pepito events cog
-        'cogs.hello'            # Invited cog
+        'cogs.hello',           # Invited cog
         'cogs.reminder'         # Reminder cog
     ]
     for cog in cogs:
