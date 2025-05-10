@@ -46,17 +46,19 @@ A Discord bot that tracks Pépito's adventures, providing real-time updates abou
 ## Project Structure
    ```
 pepito-discord/
-├── .env              # Environment variables (not in git)
-├── README.md         # This file
-├── bot.py            # Main application entry point
-├── cogs/             # Folder containing all bot cogs
-│   ├── setchannel.py # Cog for setting notification channels
-│   ├── announce.py   # Cog for global announcements
+├── .env                  # Environment variables (not in git)
+├── README.md             # This file
+├── bot.py                # Main application entry point
+├── cogs/                 # Folder containing all bot cogs
+│   ├── setchannel.py     # Cog for setting notification channels
+│   ├── announce.py       # Cog for global announcements
 │   ├── api_connection.py # Cog for connecting to the Pépito API
 │   ├── pepito_events.py  # Cog for handling Pépito events
-│   └── hello.py      # Cog for welcome messages
-├── channels.json     # Channels database
-└── requirements.txt  # Python dependencies
+│   ├── hello.py          # Cog for welcome messages
+│   └── reminder.py       # Cog for periodic reminders
+├── channels.json         # Channels database
+├── reminder_log.json     # Log file for tracking sent reminders
+└── requirements.txt      # Python dependencies
    ```
 
 ## Commands
