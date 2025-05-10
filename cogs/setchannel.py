@@ -13,6 +13,34 @@ class SetChannelCog(commands.Cog):
             with open(self.db_path, "w") as f:
                 json.dump({}, f)
 
+    async def ensure_all_guilds_in_db(self):
+        """Ensure all guilds the bot is in are added to the database."""
+        # Load the current database
+        if os.path.exists(self.db_path):
+            with open(self.db_path, "r") as f:
+                data = json.load(f)
+        else:
+            data = {}
+
+        # Check all guilds the bot is in
+        for guild in self.bot.guilds:
+            guild_id = str(guild.id)
+            if guild_id not in data:
+                # Add the guild to the database if it doesn't already exist
+                data[guild_id] = {
+                    "server_name": guild.name
+                }
+                print(f"Added missing guild {guild.name} (ID: {guild_id}) to the database.")
+
+        # Save the updated database
+        with open(self.db_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        """Ensure all guilds are in the database when the bot starts."""
+        await self.ensure_all_guilds_in_db()
+
     @app_commands.command(name="setchannel", description="Set a channel for the bot to use.")
     async def setchannel(self, interaction: discord.Interaction, channel: discord.TextChannel):
         guild_id = str(interaction.guild.id)
@@ -43,6 +71,28 @@ class SetChannelCog(commands.Cog):
         embed.add_field(name="Channel ID", value=channel_id, inline=False)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild: discord.Guild):
+        """Add the guild to the database when the bot is added to the server."""
+        guild_id = str(guild.id)
+        guild_name = guild.name
+
+        # Load the current database
+        if os.path.exists(self.db_path):
+            with open(self.db_path, "r") as f:
+                data = json.load(f)
+        else:
+            data = {}
+
+        # Add the guild to the database if it doesn't already exist
+        if guild_id not in data:
+            data[guild_id] = {
+                "server_name": guild_name
+            }
+            with open(self.db_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+            print(f"Added guild {guild_name} (ID: {guild_id}) to the database.")
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: discord.Guild):
