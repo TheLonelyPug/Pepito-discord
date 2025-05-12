@@ -41,8 +41,14 @@ class SetChannelCog(commands.Cog):
         """Ensure all guilds are in the database when the bot starts."""
         await self.ensure_all_guilds_in_db()
 
+    def is_admin():
+        """Check if the user has administrator permissions."""
+        async def predicate(interaction: discord.Interaction):
+            return interaction.user.guild_permissions.administrator
+        return app_commands.check(predicate)
+
     @app_commands.command(name="setchannel", description="Set a channel for the bot to use.")
-    @commands.has_permissions(administrator=True)  # Restrict to admins
+    @is_admin()  # Restrict to administrators
     async def setchannel(self, interaction: discord.Interaction, channel: discord.TextChannel):
         guild_id = str(interaction.guild.id)
         guild_name = interaction.guild.name
@@ -76,11 +82,14 @@ class SetChannelCog(commands.Cog):
     @setchannel.error
     async def setchannel_error(self, interaction: discord.Interaction, error):
         """Handle errors for the /setchannel command."""
-        if isinstance(error, commands.MissingPermissions):
-            await interaction.response.send_message(
-                "You do not have permission to use this command. Only administrators can set the notification channel.",
-                ephemeral=True
+        if isinstance(error, app_commands.CheckFailure):
+            # Create an embed for the error message
+            embed = discord.Embed(
+                title="Permission Denied",
+                description="You do not have permission to use this command. Only administrators can set the notification channel.",
+                color=discord.Color.red()
             )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
