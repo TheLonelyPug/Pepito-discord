@@ -14,16 +14,24 @@ class AnnounceCog(commands.Cog):
     async def announce(self, interaction: discord.Interaction, message: str):
         # Check if the command is executed in the developer server
         if interaction.guild.id != self.developer_server_id:
-            await interaction.response.send_message(
-                "This command can only be used in the developer server.", ephemeral=True
+            embed = discord.Embed(
+                title="Permission Denied",
+                description="This command can only be used in the developer server.",
+                color=discord.Color.red()
             )
+            embed.set_footer(text="Pépito Notification System")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         # Load the channels database
         if not os.path.exists(self.db_path):
-            await interaction.response.send_message(
-                "No channels have been set yet.", ephemeral=True
+            embed = discord.Embed(
+                title="No Channels Set",
+                description="No channels have been set yet.",
+                color=discord.Color.red()
             )
+            embed.set_footer(text="Pépito Notification System")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         with open(self.db_path, "r") as f:
@@ -47,6 +55,7 @@ class AnnounceCog(commands.Cog):
                         description=message,
                         color=discord.Color.blue()
                     )
+                    embed.set_footer(text="Pépito Notification System")
                     await channel.send(embed=embed)
                 except Exception as e:
                     failed_guilds.append(info["server_name"])
@@ -56,14 +65,21 @@ class AnnounceCog(commands.Cog):
         # Respond to the user
         if failed_guilds:
             failed_list = "\n".join(failed_guilds)
-            await interaction.response.send_message(
-                f"Announcement sent, but failed to deliver to the following servers:\n{failed_list}",
-                ephemeral=True
+            embed = discord.Embed(
+                title="Partial Success",
+                description=f"Announcement sent, but failed to deliver to the following servers:\n{failed_list}",
+                color=discord.Color.orange()
             )
+            embed.set_footer(text="Pépito Notification System")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
         else:
-            await interaction.response.send_message(
-                "Announcement sent successfully to all servers!", ephemeral=True
+            embed = discord.Embed(
+                title="Success",
+                description="Announcement sent successfully to all servers!",
+                color=discord.Color.green()
             )
+            embed.set_footer(text="Pépito Notification System")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 # Add this setup function
 async def setup(bot):
