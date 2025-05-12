@@ -42,6 +42,7 @@ class SetChannelCog(commands.Cog):
         await self.ensure_all_guilds_in_db()
 
     @app_commands.command(name="setchannel", description="Set a channel for the bot to use.")
+    @commands.has_permissions(administrator=True)  # Restrict to admins
     async def setchannel(self, interaction: discord.Interaction, channel: discord.TextChannel):
         guild_id = str(interaction.guild.id)
         guild_name = interaction.guild.name
@@ -71,6 +72,15 @@ class SetChannelCog(commands.Cog):
         embed.add_field(name="Channel ID", value=channel_id, inline=False)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @setchannel.error
+    async def setchannel_error(self, interaction: discord.Interaction, error):
+        """Handle errors for the /setchannel command."""
+        if isinstance(error, commands.MissingPermissions):
+            await interaction.response.send_message(
+                "You do not have permission to use this command. Only administrators can set the notification channel.",
+                ephemeral=True
+            )
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
