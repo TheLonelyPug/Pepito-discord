@@ -76,6 +76,7 @@ class SetChannelCog(commands.Cog):
         )
         embed.add_field(name="Server Name", value=guild_name, inline=False)
         embed.add_field(name="Channel ID", value=channel_id, inline=False)
+        embed.set_footer(text="Pépito Notification System")
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
@@ -89,6 +90,7 @@ class SetChannelCog(commands.Cog):
                 description="You do not have permission to use this command. Only administrators can set the notification channel.",
                 color=discord.Color.red()
             )
+            embed.set_footer(text="Pépito Notification System")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @commands.Cog.listener()
