@@ -67,6 +67,7 @@ class ReminderCog(commands.Cog):
                         ),
                         color=discord.Color.orange()
                     )
+                    embed.set_footer(text="Pépito Notification System")  # Add footer to the embed
                     try:
                         await channel.send(embed=embed)
                         print(f"Sent reminder to {guild.name} (ID: {guild.id}) in channel {channel.name}.")
