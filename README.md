@@ -8,7 +8,7 @@ A Discord bot that tracks Pépito's adventures, providing real-time updates abou
 ## Features
 - 🏠 Real-time tracking of Pépito's location (indoor/outdoor)
 - 📢 Global announcements for all servers
-- ⏰ Periodic reminders for server admins to configure notification channels (WIP)
+- ⏰ Periodic reminders for server admins to configure notification channels
 - 🖼️ Embedded messages with images and updates
 
 ## Setup
